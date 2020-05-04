@@ -1,1 +1,3 @@
-# COMP40610-Information_Visualisation_Assignment_1
+# COMP40610 Information Visualisation Assignment 2 
+
+Vega-lite project 
