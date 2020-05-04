@@ -1,0 +1,131 @@
+<html>
+   <head>
+      <title> YOUR NAME - Assignment</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+      <style>
+         body {
+         font-family: sans-serif;
+         }
+      </style>
+   </head>
+   <body>
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+               <td style="vertical-align: top;">Konstantina Kanta</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+               <td style="vertical-align: top;">19202960</td>
+            </tr>
+            <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/konstantinakanta/COMP40610-Information_Visualisation_Assignment_1/master/anage_data.csv" target="_blank" rel="noopener">Animal Age Dataset</a>.</p>
+    <p>AnAge is a curated database of ageing and life history in animals, including extensive longevity records. It was primarily developed for comparative biology studies, in particular studies of longevity and ageing, but can also be useful for ecological and conservation studies and as a reference for zoos and field biologists.
+      <p>
+    I did not do any changes to the dataset, I only converted it from txt to csv and upload it to my github page. I did some calculations and analysis in python in order to get some statsitcs and become more familiar with the dataset. Lastly, I used tableau to have a first look of some ideas for graphs.
+    </p>
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+               <td style="vertical-align: top;">
+
+                What is the average number of progenies per year amongst the top productive mammalia?
+
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <hr />
+      <div id="vis"></div>
+      <hr />
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+               <td style="vertical-align: top;">
+                The bar chart shows the average number of progenies per year for the top 14 most productive mammalia and their names. The rule indicates the average number of progenies amongst this mammalia. The bar is sorted in ascending order.
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Insight:</strong></td>
+               <td style="vertical-align: top;">
+                 This graph is particularly useful for people responsible for the control of the overpopulation amongst some certain animal categories and the balance of the ecosystem. 
+                  <p>
+                  I calculated the number of progenies for each animal by multiplying the number of Litter Clutch Size, which is the number of progenies from each birth, with the number of Litters Clutches Per Year, which is the estimation of how many times a year this animals give birth. 
+                  <p>From the graph we can see which animals amongst mammalia have the biggest productivity in progenies each year and what type of animals is that, for example in this graph we see a lot of animals being mouses and rats. In addition we see that most of these animals are below the average line, meaning that the five species of animals that exceed the line, exceeds it by a great number.  
+
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Design considerations</strong></td>
+               <td style="vertical-align: top;">
+                 I have used bar chart as they are effective at displaying the combination of quantitative and nominal information. 
+<p>
+                 I only kept the mammals as there where a lot of data for their Litter Clutch and chose to display the common name of the animals and not the bigger category they belong to like Family etc because I thought it would be more useful to know the top productive animals by itselfs.
+                 <p>
+                  I used 'layer' so I can have two marks: my bars and the rule, which informs what is the average number of progenies amongst these mammalias. I used opacity to by bars so the vertical lines for the number of progenies would be more obvious. I placed the comon name of the animals in the y-axis so it would be easier to read the names compared to the x-axis. Lastly, I made my graph interactive so that users can find the exact number of progenies for each animal.
+
+               </td>
+            </tr>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+               <td style="vertical-align: top;">As stated before I calculated the number or progenies each animal produces every year as "babies". I filtered out all the classes except of mammalias, as there where a lot of classes and the graph would be too big, and also mammalias had the highest number of records. I filtered out the animals that produced less than 25 babies per year as the graph would become to big if I have kepted more and as the main attention should be focused in the top producive species./td>
+            </tr>
+         </tbody>
+      </table>
+      <script type="text/javascript">
+        var yourVlSpec =  {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title": "Average number of progeny in animals with high productivity",
+  "data": {"url": "https://raw.githubusercontent.com/konstantinakanta/COMP40610-Information_Visualisation_Assignment_1/master/anage_data.csv",
+    "format": {"type": "csv"} },
+  "transform": [
+    {"filter": {"field": "Class","oneOf":["Mammalia"]}},
+    {"calculate": "datum.LitterClutchSize * datum.LittersClutchesPerYear ", "as": "babies"},
+    {"filter": "datum.babies > 25"}
+  ],
+  "layer": [
+    {
+    "mark": {
+    "type": "bar",
+    "opacity": 0.75,
+    "color": "#754222"
+  },
+      "encoding": {
+    "tooltip": {"field": "babies", "type": "quantitative"},
+    "href": {"field": "url", "type": "quantitative"},
+
+
+
+"x": {"field": "babies","type": "quantitative","axis": {"title": "Average number of progeny (year)"}},
+    "y": {"field": "CommonName", "type": "ordinal", "sort": "x","axis": {"title":"Mammalia with top yearly progeny productivity"}}
+      }
+    },
+    {
+      "mark": {"type": "rule", "color": "red"},
+      
+      
+
+      "encoding": {
+        
+        "x": {
+          "aggregate": "average",
+          "field": "babies",
+          "type": "quantitative"
+        }
+      }
+    }
+   
+  ]
+}
+
+            vegaEmbed("#vis", yourVlSpec);
+      </script>
+   </body>
+</html>

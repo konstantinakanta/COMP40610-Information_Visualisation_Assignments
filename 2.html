@@ -1,0 +1,115 @@
+<html>
+   <head>
+      <title> YOUR NAME - Assignment</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+      <style>
+         body {
+         font-family: sans-serif;
+         }
+      </style>
+   </head>
+   <body>
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+               <td style="vertical-align: top;">Konstantina Kanta</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+               <td style="vertical-align: top;">19202960</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+               <td style="vertical-align: top;"> 
+        <p><a href="https://raw.githubusercontent.com/konstantinakanta/COMP40610-Information_Visualisation_Assignment_1/master/anage_data.csv" target="_blank" rel="noopener">Animal Age Dataset</a>.</p>
+    	<p>AnAge is a curated database of ageing and life history in animals, including extensive longevity records. It was primarily developed for comparative biology studies, in particular studies of longevity and ageing, but can also be useful for ecological and conservation studies and as a reference for zoos and field biologists.</p>
+    	      <p>
+    I did not do any changes to the dataset, I only converted it from txt to csv and upload it to my github page. I did some calculations and analysis in python in order to get some statsitcs and become more familiar with the dataset. Lastly, I used tableau to have a first look of some ideas for graphs.
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+               <td style="vertical-align: top;">
+               	Based on the difference of days male and female animals need to reach maturity, 
+        		are there a lot of animals that because of this difference would have a 
+        		delay in their mating and their productivity? What are the animals that would have a delay? (read about the delay in productivity in the insight section)
+
+
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <hr />
+      <div id="vis"></div>
+      <hr />
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+               <td style="vertical-align: top;">
+               	This scatterplot shows the difference between the days a male and a female animal need to reach maturity. The points laying in the diagonal indicate that the difference is zero, while the points close to axises indicate a higher difference. The points are colored according to the size of the difference: when the difference is small the points have green color, when the difference is big the color tends to become red. Green indicates that there would be a small delay in productivity and red a big delay in productivity (read about the delay in productivity in the insight section).
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Insight:</strong></td>
+               <td style="vertical-align: top;">
+               	This graph could be very useful to people that are responsible for the production of certain animal species. In order for animals to mate both male and female of the same species has to reach their maturity. If there is a big difference in the days between male and female maturity, the production of this specie would have a delay but if they mature around the same time the productivity can reach high numbers. A high productivity could be a risk of overpopulation of a certain animal specie and a low productivity would cause underpopulation. The green points indicate that there are a lot of species that have a small difference and the red points that there are a few species with high difference. Most of the animals are laying in the diagonal and have a zero difference. The graph is interactive so that we can spot the name of the animals, for example, the outlier with the deep red color is the "False killer whale" and has a big difference amongst sex. 
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Design considerations</strong></td>
+               <td style="vertical-align: top;">
+				I have used a scatterplot as it is a very effective way to show the relationship betwen two quantitative variables, female and male maturity in days, taking advantage of our ability to accurately perceive variation in both horizontal and vertical position. I chose the green to red color scheme (red to green inversed) as people are used to think that when something is color green is "safe" and when it tends to be red "alarming". I made the graph interative so the user can hover on dots and learn the exact name of the animal this difference belongs to. 
+				<p>
+				A limitation of this plot is that it suffers from overplotting - many points are drawn on top of each other. To solve this problem I excluded an outlier that had more than 5000 Female Maturity Days. With this action, the scale of the axis became smaller giving a more detailed graph for the rest of the data.
+				<p> I thought of putting lines between the dots and the diagonal so that people would understand easier how big is the difference but I chose to use colors to highlight this as the number of points is big and the lines would not make the graph clear.
+
+               </td>
+            </tr>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+               <td style="vertical-align: top;">
+               	I kept the animals that their maturity days was more than zero and as I said in the previous section, I removed the outlier that had more than 5000 days for female maturity so I can have a more detailed graph. Lastly, I calculated the absolute difference of the days that female and male animals reach maturity and created a new 'column' named "difference".
+               	
+
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <script type="text/javascript">
+        var yourVlSpec =  {
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": "Absolute difference between female and male maturity in animals",
+  "data": {"url": "https://raw.githubusercontent.com/konstantinakanta/COMP40610-Information_Visualisation_Assignment_1/master/anage_data.csv",
+    "format": {"type": "csv"} 
+    },
+  "transform": [
+    {"filter": "datum.FemaleMaturityDays > 0"},
+    {"filter": "datum.FemaleMaturityDays < 5000"},
+    {"filter": "datum.MaleMaturityDays > 0"},
+    {"calculate": "abs(datum.FemaleMaturityDays - datum.MaleMaturityDays) ", "as": "difference"}
+
+  ],
+  "mark": {"type":"circle", "opacity": 0.6},
+
+  "encoding": 
+    {      "tooltip": {"field": "CommonName", "type":       "nominal"},
+      "href": {"field": "url", "type": "nominal"},
+      "y": {"field": "FemaleMaturityDays","type": "quantitative","axis": {"title":"Maturiry reached in females (days)"}},
+    "x": {"field": "MaleMaturityDays", "type": "quantitative","axis": {"title":"Maturiry reached in males (days)"}},
+    "color": {"field": "difference", "type": "quantitative", "scale":{
+    "scheme":"redyellowgreen", "reverse": true}
+    }
+    },
+  "width": 500,
+  "height": 500
+
+}
+
+            vegaEmbed("#vis", yourVlSpec);
+      </script>
+   </body>
+</html>

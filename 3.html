@@ -1,0 +1,106 @@
+<html>
+   <head>
+      <title> YOUR NAME - Assignment</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+      <style>
+         body {
+         font-family: sans-serif;
+         }
+      </style>
+   </head>
+   <body>
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+               <td style="vertical-align: top;">Konstantina Kanta</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+               <td style="vertical-align: top;">19202960</td>
+            </tr>
+            <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/konstantinakanta/COMP40610-Information_Visualisation_Assignment_1/master/anage_data.csv" target="_blank" rel="noopener">Animal Age Dataset</a>.</p>
+    <p>AnAge is a curated database of ageing and life history in animals, including extensive longevity records. It was primarily developed for comparative biology studies, in particular studies of longevity and ageing, but can also be useful for ecological and conservation studies and as a reference for zoos and field biologists.</p>
+          <p>
+    I did not do any changes to the dataset, I only converted it from txt to csv and upload it to my github page. I did some calculations and analysis in python in order to get some statsitcs and become more familiar with the dataset. Lastly, I used tableau to have a first look of some ideas for graphs.
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+               <td style="vertical-align: top;">
+               	What conclusions do you make when you compare the average maximum longetivity of animal classes in captivity and in the wild? Do animals in wild tend to have a higher maximum longetivity or is the other way around? Are there categories of animals that prefer to live amongst human instead of being in the wild? </td>
+            </tr>
+         </tbody>
+      </table>
+      <hr />
+      <div id="vis"></div>
+      <hr />
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+               <td style="vertical-align: top;">
+               	The bar charts shows the mean maximum longetivity of 7 classes of animals that live in captivity and in the wild. More specifically, the y-axis shows the mean of the maximum longetivity, the x-axis shows the numbers for each category and the color of the bars indicate the speciment origin of the animals.
+
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Insight:</strong></td>
+               <td style="vertical-align: top;">
+               	With this graph we can learn information about how likely is that an animal in wild live on average more years than an animal in captivity. We can do comparison according to classes and see if the majority of classes have better results for the wild or for captivity. We can point out if the difference in the numbers is big and if there are classes that stoud out. 
+               	<p>
+               	Our results is that most of the classes animals have a higher max-longetivity in the wild than the do in captivity and the difference of the two numbers is high. For example, Chondrostei animals live in the wild on average 73 years but in captivity only 46. That graph would be very useful to an animal rights protection organization. In adition to that, results show that the Aves tend to live longer under captivity, possibly because they have more protections when living with humans. That could be a helpful insight for zoo's and breeding Aves for domestic pet purposes. 
+
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Design considerations</strong></td>
+               <td style="vertical-align: top;">
+
+I have used bar charts as they are effective at displaying quantitative information. I grouped the different classes together so the differences between the Speciment Origin for each one of them would be more obvious and the comparison easier. I placed the bars side by side to make the comparison of the different classes easier and the labels of the classes written on top of each one of them so they can be easy to read. The legend of the Specimen Origin is it on the right side of the graph indicating the color of the label (wild,captivity). The graph is interactive so the user can see the exact number of the mean max-longetivity for each category and make more precise comparisons. 
+<p>
+My initial ideas was to create a bar chart that showed the average max longetivity of animals in the wild and in captivity and another bar chart to compare the average max longetivity amongst different classes, but their combination turned out to have more meaningful results. In order to combine those two ideas, I had to limit the number of classes as the graph would have turned out to be too big and not practical. This was not though a bad thing, as it turned out there where problems with some of the classes eg. one class had only one animal listed as wild so people that would have seen the graph wouldn't easily understand that where no data for captive animals in this class, but would think that the average max longetivity was really low compared to the wild labeled.
+
+               </td>
+            </tr>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+               <td style="vertical-align: top;">For the specimen origin only the captive and wild animals intrests us for the graph not the label unknown. Lastly, I used a python script to get the classes with the most data as it didn't seem useful to put classes little data. In addition, it would be a mistake to include a class that has only one animal, because if the animal is either captive or wild the bar chart will show a big difference in their mean max longetivity number and it would be difficult for the people that see the graph to understand that this difference is due to the lack of data. </td>
+            </tr>
+         </tbody>
+      </table>
+      <script type="text/javascript">
+   var yourVlSpec =  {
+  "$schema":  "https://vega.github.io/schema/vega-lite/v4.json",
+  "title": {"text": "Comparison in longevity of wild and captive animals",
+  "anchor": "center"},
+  "data": {"url": "https://raw.githubusercontent.com/konstantinakanta/COMP40610-Information_Visualisation_Assignment_1/master/anage_data.csv",
+    	"format": {"type": "csv"}},
+  "transform": [   
+    {"filter": {"field": "SpecimenOrigin","oneOf":["captivity","wild"]}},
+    {"filter": {"field": "Class","oneOf":["Reptilia","Mammalia","Teleostei","Chondrostei","Chondrichthyes","Aves","Amphibia"]}}
+  ],
+  "mark": {"type":"rect", "opacity": 0.9, "cornerRadiusTopLeft": 2, "cornerRadiusTopRight": 2},
+  "width": {"step": 25},
+    "encoding": 
+    {
+      "tooltip": {"aggregate": "mean","field": "MaximumLongevityYrs", "type":       "quantitative"},
+      "href": {"field": "url", "type": "quantitative"},
+      "x": {"field": "SpecimenOrigin","type": "nominal", "axis":null},
+      "y": {"aggregate": "mean","field": "MaximumLongevityYrs", "type":       "quantitative", "axis": {"title":"Mean Max Longevity in years"}}, 
+     "column": {"field": "Class","type": "nominal", "axis": {"title":"Class of animals"}},
+     "color": {
+        "field": "SpecimenOrigin", "type": "nominal",
+        "scale": {"domain": ["captivity","wild"],"range": ["#ff8f1f", "#ad1fff"]}}
+    }
+}
+
+            vegaEmbed("#vis", yourVlSpec);
+      </script>
+   </body>
+</html>
