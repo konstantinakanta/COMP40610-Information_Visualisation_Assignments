@@ -1,0 +1,240 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description":"I wasn't sure only about the dimensions and colors of the graph, so I set some that I thought are close enough to the prototype. To select multiple counties in the left bar chart you have to press alt as well.",
+  "hconcat": [
+    {
+      "data": {
+        "name": "dataset",
+        "url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv"
+      },
+      "selection": {
+        "sex_selection": {
+          "type": "multi",
+          "fields": [
+            "Sex"
+          ],
+          "bind": "legend",
+          "toggle": true
+        },
+        "county_selection": {
+          "type": "multi",
+          "fields": [
+            "County"
+          ],
+          "toggle": "event.altKey"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "if(datum.Sex === 'Mixed', 0,if (datum.Sex === 'Girls', 1, 2))",
+          "as": "ordered"
+        },
+        {
+          "filter": {
+            "selection": "sex_selection"
+          }
+        },
+        {
+          "filter": {
+            "selection": "histogram_selection"
+          }
+        }
+      ],
+      "height": 679,
+      "width": 100,
+      "mark": "bar",
+      "encoding": {
+        "x": {
+          "title": "Number of schools",
+          "aggregate": "count",
+          "field": "County",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "County",
+          "type": "nominal"
+        },
+        "color": {
+          "field": "Sex",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Boys",
+              "Girls",
+              "Mixed"
+            ],
+            "range": [
+              "#1cffdd",
+              "#9c35fc",
+              "#428bff"
+            ]
+          }
+        },
+        "order": {
+          "field": "ordered",
+          "type": "quantitative"
+        },
+        "opacity": {
+          "condition": {
+            "selection": "county_selection",
+            "value": 1
+          },
+          "value": 0.5
+        }
+      }
+    },
+    {
+      "vconcat": [
+        {
+          "layer": [
+            {
+              "data": {
+                "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Ireland_custom_topjson.json",
+                "format": {
+                  "type": "topojson",
+                  "feature": "IRL_adm1"
+                }
+              },
+              "width": 400,
+              "height": 550,
+              "mark": {
+                "type": "geoshape",
+                "stroke": "white",
+                "fill": "#cccccc"
+              }
+            },
+            {
+              "selection": {
+                "sex_selection": {
+                  "type": "multi",
+                  "fields": [
+                    "Sex"
+                  ],
+                  "bind": "legend",
+                  "toggle": true
+                }
+              },
+              "data": {
+                "name": "dataset"
+              },
+              "transform": [
+                {
+                  "filter": {
+                    "selection": "histogram_selection"
+                  }
+                },
+                {
+                  "filter": {
+                    "selection": "county_selection"
+                  }
+                }
+              ],
+              "width": 400,
+              "height": 350,
+              "encoding": {
+                "size": {
+                  "field": "Total",
+                  "type": "quantitative",
+                  "scale": {
+                    "type": "threshold",
+                    "domain": [
+                      251,
+                      501,
+                      750
+                    ]
+                  }
+                },
+                "longitude": {
+                  "field": "Long",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "Lat",
+                  "type": "quantitative"
+                },
+                "color": {
+                  "field": "Sex",
+                  "type": "nominal",
+                  "scale": {
+                    "domain": [
+                      "Boys",
+                      "Girls",
+                      "Mixed"
+                    ],
+                    "range": [
+                      "#00C7A9",
+                      "#8101FA",
+                      "#4275db"
+                    ]
+                  }
+                },
+                "opacity": {
+                  "condition": {
+                    "selection": "sex_selection",
+                    "value": 0.75
+                  },
+                  "value": 0.001
+                },
+                "tooltip": {
+                  "field": "Sex",
+                  "type": "nominal"
+                }
+              },
+              "mark": "circle"
+            }
+          ]
+        },
+        {
+          "data": {
+            "name": "dataset"
+          },
+          "layer": [
+            {
+              "transform": [
+                {
+                  "filter": {
+                    "selection": "sex_selection"
+                  }
+                }
+              ],
+              "selection": {
+                "histogram_selection": {
+                  "type": "interval",
+                  "encodings": [
+                    "x"
+                  ]
+                }
+              },
+              "width": 400,
+              "height": 100,
+              "mark": "bar",
+              "encoding": {
+                "x": {
+                  "bin": {
+                    "maxbins": 50
+                  },
+                  "title": "Number of students",
+                  "field": "Total",
+                  "type": "quantitative"
+                },
+                "y": {
+                  "title": "Schools",
+                  "aggregate": "count",
+                  "type": "quantitative"
+                },
+                "color": {
+                  "value": "black"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "config": {
+    "legend": {
+      "orient": "right"
+    }
+  }
+}
